@@ -53,7 +53,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
 
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
 
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/test67:latest
