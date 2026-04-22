@@ -60,4 +60,5 @@ jobs:
             docker stop test67 || true
             docker rm test67 || true
             docker run -d --name test67 --restart unless-stopped -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/test67:latest
+            echo "✓ Deployed: http://${{ secrets.SSH_HOST }}:3000"
 
