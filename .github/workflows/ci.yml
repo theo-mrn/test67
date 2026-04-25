@@ -22,7 +22,19 @@ jobs:
 
       - name: Push to Trivy Dashboard
         run: |
+          echo "→ Downloading trivy-push..."
           curl -L https://github.com/theo-mrn/trivy_dashboard/releases/latest/download/trivy-push-linux-amd64 -o trivy-push
           chmod +x trivy-push
+          echo "✓ trivy-push downloaded"
+
+          echo "→ Configuring dashboard..."
+          echo "  URL: ${{ secrets.DASHBOARD_URL }}"
+          echo "  KEY: ${KEY:0:10}..."
           ./trivy-push config --url ${{ secrets.DASHBOARD_URL }} --key ${{ secrets.DASHBOARD_API_KEY }}
+          echo "✓ Config saved"
+
+          echo "→ Pushing report (project: ${{ github.repository }})..."
           ./trivy-push push --project ${{ github.repository }} --file trivy-report.json
+          echo "✓ Report pushed"
+        env:
+          KEY: ${{ secrets.DASHBOARD_API_KEY }}
