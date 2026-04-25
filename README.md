@@ -2,7 +2,7 @@
 
 > Scaffolded with [forge](https://github.com/your-org/forge) — node project.
 
-## Getting started
+## Getting starteds
 
 ```bash
 python -m venv .venv
