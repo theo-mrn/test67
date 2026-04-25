@@ -20,14 +20,9 @@ jobs:
           format: json
           output: trivy-report.json
 
-      - name: Debug vars
-        run: |
-          echo "URL='${{ vars.DASHBOARD_URL }}'"
-          echo "KEY length=${{ secrets.DASHBOARD_API_KEY != '' && 'non-vide' || 'VIDE' }}"
-          
       - name: Push to Trivy Dashboard
         run: |
           curl -L https://github.com/theo-mrn/trivy_dashboard/releases/latest/download/trivy-push-linux-amd64 -o trivy-push
           chmod +x trivy-push
-          ./trivy-push config --url ${{ vars.DASHBOARD_URL }} --key ${{ secrets.DASHBOARD_API_KEY }}
+          ./trivy-push config --url ${{ secrets.DASHBOARD_URL }} --key ${{ secrets.DASHBOARD_API_KEY }}
           ./trivy-push push --project ${{ github.repository }} --file trivy-report.json
