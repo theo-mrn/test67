@@ -2,25 +2,27 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-
-
-
-
-  docker-build:
+  build-and-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Build image
+        run: docker build -t app:${{ github.sha }} .
 
-      - name: Build image (verify)
-        uses: docker/build-push-action@v5
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
         with:
-          push: false
+          image-ref: app:${{ github.sha }}
+          format: json
+          output: trivy-report.json
 
+      - name: Push to Trivy Dashboard
+        run: |
+          curl -L https://github.com/theo-mrn/trivy_dashboard/releases/latest/download/trivy-push-linux-amd64 -o trivy-push
+          chmod +x trivy-push
+          ./trivy-push config --url ${{ secrets.DASHBOARD_URL }} --key ${{ secrets.DASHBOARD_API_KEY }}
+          ./trivy-push push --project ${{ github.repository }} --file trivy-report.json
