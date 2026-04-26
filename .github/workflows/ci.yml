@@ -13,26 +13,8 @@ jobs:
       - name: Build image
         run: docker build -t app:${{ github.sha }} .
 
-      - name: Trivy scan
-        uses: aquasecurity/trivy-action@master
+      - name: Scan & push to TrivyHub
+        uses: theo-mrn/trivy_dashboard/.github/actions/trivy-push@main
         with:
-          image-ref: app:${{ github.sha }}
-          format: json
-          output: trivy-report.json
-
-      - name: Push to Trivy Dashboard
-        run: |
-          echo "→ Downloading trivy-push..."
-          curl -L https://github.com/theo-mrn/trivy_dashboard/releases/latest/download/trivy-push-linux-amd64 -o trivy-push
-          chmod +x trivy-push
-          echo "✓ trivy-push downloaded"
-
-          echo "→ Configuring dashboard..."
-          echo "  URL: ${{ vars.DASHBOARD_URL }}"
-          echo "  KEY: ${{ vars.DASHBOARD_API_KEY }}"
-          ./trivy-push config --url ${{ vars.DASHBOARD_URL }} --key ${{ vars.DASHBOARD_API_KEY }}
-          echo "✓ Config saved"
-
-          echo "→ Pushing report (project: ${{ github.repository }})..."
-          ./trivy-push push --project ${{ github.repository }} --file trivy-report.json
-          echo "✓ Report pushed"
+          image: app:${{ github.sha }}
+          api-key: ${{ vars.DASHBOARD_API_KEY }}
