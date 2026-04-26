@@ -50,6 +50,7 @@ jobs:
 
 
       - name: Scan & push to TrivyHub
+        if: always()
         uses: theo-mrn/trivy_dashboard/.github/actions/trivy-push@main
         with:
           image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
