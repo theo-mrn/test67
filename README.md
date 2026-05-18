@@ -11,7 +11,7 @@ pip install -e .
 
 ```
 
-##  Project structure
+##  Project structure 
 
 ```
 test67/
