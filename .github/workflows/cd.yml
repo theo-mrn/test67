@@ -39,6 +39,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
 
+      - name: Scan & push to TrivyHub
+        if: always()
+        uses: theo-mrn/trivy_dashboard/.github/actions/trivy-push@main
+        with:
+          image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          api-key: ${{ secrets.TRIVYHUB_API_KEY }}
+
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -46,15 +53,6 @@ jobs:
           format: table
           exit-code: "1"
           severity: CRITICAL,HIGH
-
-
-
-      - name: Scan & push to TrivyHub
-        if: always()
-        uses: theo-mrn/trivy_dashboard/.github/actions/trivy-push@main
-        with:
-          image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-          api-key: ${{ secrets.TRIVYHUB_API_KEY }}
 
 
 
