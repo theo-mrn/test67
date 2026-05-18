@@ -41,7 +41,7 @@ jobs:
 
       - name: Scan & push to TrivyHub
         if: always()
-        uses: theo-mrn/trivy_dashboard/.github/actions/trivy-push@main
+        uses: trivyhub/trivy-push-action@v1
         with:
           image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           api-key: ${{ secrets.TRIVYHUB_API_KEY }}
